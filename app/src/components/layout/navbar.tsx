@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NeoButton } from "@/components/ui/neo-button";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +13,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Menu, User, Settings, LogOut } from "lucide-react";
 
@@ -106,6 +113,11 @@ export function Navbar({ user }: NavbarProps) {
                 </NeoButton>
               </SheetTrigger>
               <SheetContent side="left" className="neo-card">
+                <VisuallyHidden.Root>
+                  <SheetTitle>Menu</SheetTitle>
+                  <SheetDescription>Menu</SheetDescription>
+                </VisuallyHidden.Root>
+
                 <nav className="flex flex-col gap-4">
                   {navigation.map((item) => (
                     <Link
