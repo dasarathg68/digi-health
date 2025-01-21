@@ -27,11 +27,11 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <NeoButton variant="peach" className="w-full sm:w-auto">
                 <Link href="/app" className="w-full">
-                  Enter App
+                  Launch App
                 </Link>
               </NeoButton>
               <NeoButton variant="mint" className="w-full sm:w-auto">
-                <Link href="#features" className="w-full">
+                <Link href="/features" className="w-full">
                   Learn More
                 </Link>
               </NeoButton>

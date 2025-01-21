@@ -90,3 +90,14 @@
   );
   box-shadow: 4px 6px 0 0 rgba(0, 0, 0, 1);
 }
+
+@layer utilities {
+  @keyframes rotate {
+    0% {
+      transform: rotateX(0deg);
+    }
+    100% {
+      transform: rotateX(360deg);
+    }
+  }
+}
