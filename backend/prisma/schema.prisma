@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Study {
+  id              String         @id @default(cuid())
+  title           String
+  description     String
+  reward          String
+  status          StudyStatus    @default(pending)
+  creatorId       String
+  creator         User           @relation("CreatedStudies", fields: [creatorId], references: [id])
+  requirements    String[]
+  dataTypes       String[]
+  privacyMeasures String[]
+  participantCount Int           @default(0)
+  startDate       DateTime
+  endDate         DateTime
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  participants    Participant[]  @relation("StudyParticipants")
+  submissions     Submission[]
+}
+
+model Participant {
+  id               String        @id @default(cuid())
+  address          String        @unique
+  userId           String        @unique
+  user             User          @relation(fields: [userId], references: [id])
+  studies          Study[]       @relation("StudyParticipants")
+  totalEarnings    String        @default("0")
+  dataContributions Int          @default(0)
+  wearables        String[]
+  dataPreferences  Json          // Stores shareGenomic, shareWearable, shareClinic
+  submissions      Submission[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([address])
+}
+
+model User {
+  id            String       @id @default(cuid())
+  email         String?      @unique
+  name          String?
+  createdStudies Study[]     @relation("CreatedStudies")
+  participant    Participant?
+  role          UserRole     @default(participant)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Submission {
+  id            String      @id @default(cuid())
+  studyId       String
+  study         Study       @relation(fields: [studyId], references: [id])
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id])
+  dataHash      String      // IPFS hash or other reference to encrypted data
+  status        SubmissionStatus @default(pending)
+  reward        String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([studyId])
+  @@index([participantId])
+}
+
+enum StudyStatus {
+  pending
+  active
+  completed
+}
+
+enum UserRole {
+  participant
+  researcher
+  admin
+}
+
+enum SubmissionStatus {
+  pending
+  approved
+  rejected
+  rewarded
+}
